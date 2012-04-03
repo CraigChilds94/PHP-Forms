@@ -25,11 +25,12 @@ class Form {
 		echo '</form>';
 	}
 	
-	/* Form::dropdown(array('hello', 'is', 'it', 'me', 'you're', 'looking', 'for'), '') */
+	/* Form::dropdown(array('hello' => 'value', 'is' => 'value', 'it' => 'value', 'me' => 'value', 'you're' => 'value', 'looking' => 'value', 'for' => 'value'), '') */
 	public static function dropdown($items, $name = 'dropdown', $id ='', $class = '') {
+		
 		echo '<select name="' . $name . '"id="'. $id .'" class="'. $class .'">';
-		foreach($items as $item){
-			echo '<option value="' . $item . '">';
+		foreach($items as $item => $value){
+			echo '<option value="' . (empty($value) ? $item : $value) . '">';
 			echo $item;
 			echo '</option>';
 		}
@@ -66,3 +67,5 @@ class Form {
 	     self::end();
 	}
 }
+
+Form::dropdown(array('hello', 'gingers'));
