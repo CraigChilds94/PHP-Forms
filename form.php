@@ -67,5 +67,3 @@ class Form {
 	     self::end();
 	}
 }
-
-Form::dropdown(array('hello', 'gingers'));
