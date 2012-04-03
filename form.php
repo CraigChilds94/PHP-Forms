@@ -11,7 +11,7 @@
 	# Author: Craig CHILDS                               #
 	#                                                    #
 	# Version: 0.0.1                                     #
-	# Copyright 2012 Craig Childs                        #
+	# http://licence.visualidiot.com/                    #
 	######################################################
 
 class Form {
