@@ -51,4 +51,18 @@ class Form {
 	public static function submit($name = 'submit', $value = 'Submit', $id ='', $class = '') {
 		echo '<input type="submit" name="' . $name . '"  value="' . $value . '"  id="'. $id .'" class="'. $class .'">';
 	}
+	
+	public static function password($name = 'password', $value = '', $placeholder = 'Enter your password here', $id = '', $class =''){
+		self::input('password', $value, $name, $placeholder, $id, $class);
+	}
+	
+	public static function login($action = '', $id = '', $class = '', $breaks = false){
+		self::start('POST', $action, $id, $class);
+			 self::input('text', '', 'login', 'Type your username here');
+		     echo ($breaks ? '<br>' : '');
+		     self::password('password', '', 'Type your password here');
+	         echo ($breaks ? '<br>' : '');
+		     self::submit();
+	     self::end();
+	}
 }
