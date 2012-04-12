@@ -10,7 +10,7 @@
 	#                                                    #                    
 	# Author: Craig CHILDS                               #
 	#                                                    #
-	# Version: 0.1.0                                     #
+	# Version: 0.1.1                                     #
 	# http://licence.visualidiot.com/                    #
 	######################################################
 	
