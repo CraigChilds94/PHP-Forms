@@ -10,25 +10,37 @@
 	#                                                    #                    
 	# Author: Craig CHILDS                               #
 	#                                                    #
-	# Version: 0.0.1                                     #
+	# Version: 0.1.0                                     #
 	# http://licence.visualidiot.com/                    #
 	######################################################
 
 class Form {
-	/* Form::start('POST', '') */
-	public static function start($method = 'GET', $action = '', $id ='', $class = '') {
-		echo '<form method="' . $method . '" action="' . $action . '" id="'. $id .'" class="'. $class .'">';
+
+	public static $forms, $files, $allows, $where;
+
+	public static function start($options = array()) {
+		echo '<!-- START OF ' . strtoupper($options['name']) . ' FORM -->';
+		echo self::_generateTag('form', $options);
+		
+		//  Store the form in an array.
+		self::$forms[] = array('name' => (!empty($options['name']) ? $options['name'] : "default"), 'method' => (!empty($options['method']) ? $options['method'] : 'GET'));
+		
+		//  Store the files in the class
+		if(!empty($_FILES)){
+			self::$files = $_FILES['file'];
+		}
 	}
 	
 	/* Form::end() */
 	public static function end() {
 		echo '</form>';
+		echo '<!-- END OF FORM -->';
 	}
 	
-	/* Form::dropdown(array('hello' => 'value', 'is' => 'value', 'it' => 'value', 'me' => 'value', 'you're' => 'value', 'looking' => 'value', 'for' => 'value'), '') */
-	public static function dropdown($items, $name = 'dropdown', $id ='', $class = '') {
+	public static function dropdown($items, $options = array()) {
+		echo self::_generateTag('select', $options);
 		
-		echo '<select name="' . $name . '"id="'. $id .'" class="'. $class .'">';
+		//  Generate an option on the dropdown for every item in the items array.
 		foreach($items as $item => $value){
 			echo '<option value="' . (empty($value) ? $item : $value) . '">';
 			echo $item;
@@ -38,32 +50,138 @@ class Form {
 		echo '</select>';
 	}
 
-	/* Form::textarea('mytextarea', 'This already appears in the box') */
-	public static function textarea($name = 'textarea', $contents = '', $id ='', $class = '') {
-		echo '<textarea name="' . $name . '"id="'. $id .'" class="'. $class .'">' . $contents . '</textarea>';
+	public static function textarea($options = array(), $contents = '') {
+			echo self::_generateTag('textarea', $options, $contents);
 	}
 	
-	/* Form::input('mytextbox', 'this is already in it', 'the name of the input', 'my placeholder', 'myid', 'class') */
-	public static function input($type = 'text', $value = '', $name = '', $placeholder = '' , $id ='', $class = '') {
-		echo '<input type="' . $type . '" name="' . $name  . '" placeholder="' . $placeholder . '" id="'. $id .'" class="'. $class .'" value="' . $value . '">';
+	public static function input($options = array('type' => 'text')) {
+			echo self::_generateTag('input', $options);
 	}
 	
-	/* Form::submit('thenameofmybutton', 'Submit value') */
-	public static function submit($name = 'submit', $value = 'Submit', $id ='', $class = '') {
-		echo '<input type="submit" name="' . $name . '"  value="' . $value . '"  id="'. $id .'" class="'. $class .'">';
-	}
+	public static function submit($options = array('value' => 'submit', 'type' => 'submit')) {
+				echo self::_generateTag('input', $options);	}
 	
+	/* Form::password();  */
 	public static function password($name = 'password', $value = '', $placeholder = 'Enter your password here', $id = '', $class =''){
-		self::input('password', $value, $name, $placeholder, $id, $class);
+		self::input(array('name' => $name, 'value'=> $value, 'placeholder' => $placeholder, 'id' => $id, 'class' => $class));
 	}
 	
-	public static function login($action = '', $id = '', $class = '', $breaks = false){
-		self::start('POST', $action, $id, $class);
-			 self::input('text', '', 'login', 'Type your username here');
+	/* Form::login(); */
+	public static function login($name = 'login', $action = '', $id = '', $class = '', $breaks = false){
+		// Generate a login form
+		self::start(array('name' => $name, 'method' => 'POST', 'enctype' => "multipart/form-data", "action" => $action));
+			 self::input(array('type' => 'text', 'name' => 'username', 'placeholder' => 'Type your username here'));
 		     echo ($breaks ? '<br>' : '');
 		     self::password('password', '', 'Type your password here');
 	         echo ($breaks ? '<br>' : '');
 		     self::submit();
-	     self::end();
+	    self::end();
+	}
+	
+	public static function set($type, $key, $value){
+		//  Save ourselves from checking both uppercase and lowercase
+		$type = strtolower($type);
+		
+		if(!empty($type) && !empty($key) && !empty($value)){
+			return $type[$key] = $value;
+		}
+		
+		return array('Error' => 'You are trying to set nothing.');
+	}
+	
+	public function getInputType($name){
+		if(!empty(self::$forms)){
+			foreach(self::$forms as $form){
+				if(!empty($form[$name])){
+					return $form[$name];
+				}
+			}
+		}else{
+			echo 'You do not have any forms on this page.';
+		}
+		
+		return array('error' => 'There is no form by that name, or you have not declared a request type. e.g.(POST, GET, REQUEST)');
+	}
+	
+	public static function listforms(){
+		//  If there are forms loop through and echo with a line break
+		if(!empty(self::$forms)){
+			foreach(self::$forms as $form){
+				if(!empty($form)){
+					echo $form  . '<br>';
+				}
+			}
+		}else{
+			//  Otherwise throw error.
+			echo 'You do not have any forms on this page.';
+		}
+	}
+	
+	public function upload($name = 'upload', $where, $allows, $action = ''){
+		//  Display the form
+		self::start(array('name' => $name, 'method' => 'POST', 'enctype' => "multipart/form-data", "action" => $action));
+			self::input(array('type' => 'file', 'name' => 'file'));
+			self::submit();
+		self::end();
+		
+		// Do all of our logic if we want it to be done on this page
+		if($action == ''){
+			if(isset($_POST) && !empty(self::$files)){
+				if(self::_isAllowed($allows)){
+					self::_moveFile($where);
+				}else{
+					echo 'That file type is not allowed!';
+				}
+			}
+		}else{
+			//  This means that we are moving the file on another page, so store our stuff
+			self::$allows = $allows;
+			self::$where = $where;
+		}
+	}
+	
+	/* Use this if you want the logic to take place on a different page. */
+	public static function recieveFile(){
+		// Do the logic from a global point of view
+		if(isset($_POST) && !empty(self::$files) && !empty(self::$allows) && !empty(self::$where)){
+			if(self::_isAllowed(self::$allows)){
+				self::_moveFile(self::$where);
+			}else{
+				echo 'That file type is not allowed!';
+			}
+		}else{
+			echo 'Somethings that are required were not set. e.g. (POST, $_FILES, Global file data)';
+		}
+	}
+	
+	private function _isAllowed($allows){
+		//  Return true if file type is in the array.
+		return in_array(self::$files['type'], $allows);
+	}
+	
+	private function _moveFile($where){
+		//  Move our file
+		return move_uploaded_file(self::$files["tmp_name"], (empty($where) ? '' : $where) . self::$files["name"]);
+	}
+	
+	private function _generateTag($tag, $options, $content = ''){
+		//  Store the different tag syntax elements
+		$varied = array('button', 'textarea');
+		
+		$out = '<' . $tag . ' ';
+		
+		//  fill the tag with our options
+		foreach ($options as $key => $value) {
+			$out .= $key . '="' . $value . '" ';
+		}
+		
+		//  If its not on the varied syntax array just close, else close the appropriate way
+		if(!in_array($tag, $varied)){
+			$out .= '>';
+		}else{
+			$out .=  '>' . ($tag == 'button' ? $options['value'] : '') . '</' . $tag . '>';
+		}
+		
+		return $out;
 	}
 }
