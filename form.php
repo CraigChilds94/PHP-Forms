@@ -13,12 +13,17 @@
 	# Version: 0.1.0                                     #
 	# http://licence.visualidiot.com/                    #
 	######################################################
+	
 
 class Form {
 
 	public static $forms, $files, $allows, $where;
+	
+	//  Prepare some easy arrays already set up for the developer.
+	public static $usernameInput = array('name' => 'username', 'type' => 'text', 'placeholder' => 'Type username here.');
+	public static $passwordInput = array('name' => 'password', 'type' => 'password', 'placeholder' => 'Type password here.');
 
-	public static function start($options = array()) {
+	public static function start($options = array('name' => 'default', 'action' => '', 'method' => 'GET')) {
 		echo '<!-- START OF ' . strtoupper($options['name']) . ' FORM -->';
 		echo self::_generateTag('form', $options);
 		
@@ -51,19 +56,19 @@ class Form {
 	}
 
 	public static function textarea($options = array(), $contents = '') {
-			echo self::_generateTag('textarea', $options, $contents);
+		echo self::_generateTag('textarea', $options, $contents);
 	}
 	
 	public static function input($options = array('type' => 'text')) {
-			echo self::_generateTag('input', $options);
+		echo self::_generateTag('input', $options);
 	}
 	
 	public static function submit($options = array('value' => 'submit', 'type' => 'submit')) {
-				echo self::_generateTag('input', $options);	}
+		echo self::_generateTag('input', $options);	}
 	
 	/* Form::password();  */
-	public static function password($name = 'password', $value = '', $placeholder = 'Enter your password here', $id = '', $class =''){
-		self::input(array('name' => $name, 'value'=> $value, 'placeholder' => $placeholder, 'id' => $id, 'class' => $class));
+	public static function password($options = array('name' => 'password', 'type' => 'password')){
+		self::input($options);
 	}
 	
 	/* Form::login(); */
@@ -96,8 +101,6 @@ class Form {
 					return $form[$name];
 				}
 			}
-		}else{
-			echo 'You do not have any forms on this page.';
 		}
 		
 		return array('error' => 'There is no form by that name, or you have not declared a request type. e.g.(POST, GET, REQUEST)');
@@ -141,7 +144,7 @@ class Form {
 	}
 	
 	/* Use this if you want the logic to take place on a different page. */
-	public static function recieveFile(){
+	public static function receiveFile(){
 		// Do the logic from a global point of view
 		if(isset($_POST) && !empty(self::$files) && !empty(self::$allows) && !empty(self::$where)){
 			if(self::_isAllowed(self::$allows)){
