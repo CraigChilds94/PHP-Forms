@@ -94,7 +94,7 @@ class Form {
 		return array('Error' => 'You are trying to set nothing.');
 	}
 	
-	public function getInputType($name){
+	public static function getInputType($name){
 		if(!empty(self::$forms)){
 			foreach(self::$forms as $form){
 				if(!empty($form[$name])){
@@ -120,7 +120,7 @@ class Form {
 		}
 	}
 	
-	public function upload($name = 'upload', $where, $allows, $action = ''){
+	public static function upload($name = 'upload', $where, $allows, $action = ''){
 		//  Display the form
 		self::start(array('name' => $name, 'method' => 'POST', 'enctype' => "multipart/form-data", "action" => $action));
 			self::input(array('type' => 'file', 'name' => 'file'));
@@ -157,17 +157,17 @@ class Form {
 		}
 	}
 	
-	private function _isAllowed($allows){
+	private static function _isAllowed($allows){
 		//  Return true if file type is in the array.
 		return in_array(self::$files['type'], $allows);
 	}
 	
-	private function _moveFile($where){
+	private static function _moveFile($where){
 		//  Move our file
 		return move_uploaded_file(self::$files["tmp_name"], (empty($where) ? '' : $where) . self::$files["name"]);
 	}
 	
-	private function _generateTag($tag, $options, $content = ''){
+	private static function _generateTag($tag, $options, $content = ''){
 		//  Store the different tag syntax elements
 		$varied = array('button', 'textarea');
 		
