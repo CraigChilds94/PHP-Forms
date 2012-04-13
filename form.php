@@ -25,14 +25,18 @@ class Form {
 
 	public static function start($options = array('name' => 'default', 'action' => '', 'method' => 'GET')) {
 		echo '<!-- START OF ' . strtoupper($options['name']) . ' FORM -->';
-		echo self::_generateTag('form', $options);
-		
-		//  Store the form in an array.
-		self::$forms[] = array('name' => (!empty($options['name']) ? $options['name'] : "default"), 'method' => (!empty($options['method']) ? $options['method'] : 'GET'));
-		
-		//  Store the files in the class
-		if(!empty($_FILES)){
-			self::$files = $_FILES['file'];
+		if(is_array($options)){
+			echo self::_generateTag('form', $options);
+				
+			//  Store the form in an array.
+			self::$forms[] = array('name' => (!empty($options['name']) ? $options['name'] : "default"), 'method' => (!empty($options['method']) ? $options['method'] : 'GET'));
+			
+			//  Store the files in the class
+			if(!empty($_FILES)){
+				self::$files = $_FILES['file'];
+			}
+		}else{
+			echo 'Error: The first parameter of this method takes an array.';
 		}
 	}
 	
