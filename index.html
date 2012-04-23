@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Php-forms by Bertdasquirt</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Php-forms</h1>
+        <p>A Simple php form class.</p>
+        <p class="view"><a href="https://github.com/Bertdasquirt/PHP-Forms">View the Project on GitHub <small>Bertdasquirt/PHP-Forms</small></a></p>
+        <ul>
+          <li><a href="https://github.com/Bertdasquirt/PHP-Forms/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Bertdasquirt/PHP-Forms/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Bertdasquirt/PHP-Forms">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>PHP-Forms Documentation v0.1.4.1</h1>
+
+<p>This PHP class has been developed to make form generation easier for you. It also looks a hell of a lot tidier and allows you to combine simple forms and complex designs.</p>
+
+<h2>How do I use it?</h2>
+
+<p>Download the source for this repository, put it into a directory within your site. And because its a static class it's very easy to use. First include the file like so:</p>
+
+<h3>Example:</h3>
+
+<p>Here is an example of how to use the form class. This example is that of a comments form.</p>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="c1">//  We need the file, so include it.</span>
+    <span class="k">include</span> <span class="s1">'form.php'</span><span class="p">;</span>
+
+    <span class="c1">//  Store the form options in an array. </span>
+    <span class="nv">$opts</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'form1'</span><span class="p">,</span> <span class="s1">'action'</span> <span class="o">=&gt;</span> <span class="s1">''</span><span class="p">,</span> <span class="s1">'method'</span> <span class="o">=&gt;</span> <span class="s1">'POST'</span><span class="p">,</span> <span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="s1">'comment'</span><span class="p">);</span>
+
+    <span class="nx">Form</span><span class="o">::</span><span class="na">start</span><span class="p">(</span><span class="nv">$opts</span><span class="p">);</span>
+        <span class="nx">Form</span><span class="o">::</span><span class="na">input</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'name'</span><span class="p">,</span> <span class="s1">'placeholder'</span> <span class="o">=&gt;</span> <span class="s1">'Enter your name here'</span><span class="p">));</span>
+        <span class="nx">Form</span><span class="o">::</span><span class="na">textarea</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'comment'</span><span class="p">,</span> <span class="s1">'value'</span> <span class="o">=&gt;</span> <span class="s1">'Enter your message here'</span><span class="p">));</span>
+        <span class="nx">Form</span><span class="o">::</span><span class="na">submit</span><span class="p">();</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">end</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<p>The above example should output HTML like so:</p>
+
+<div class="highlight">
+<pre><span class="c">&lt;!-- START OF FORM1 FORM --&gt;</span><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">"form1"</span> <span class="na">action=</span><span class="s">""</span> <span class="na">method=</span><span class="s">"POST"</span> <span class="na">id=</span><span class="s">"comment"</span> <span class="nt">&gt;&lt;input</span> <span class="na">name=</span><span class="s">"name"</span> <span class="na">placeholder=</span><span class="s">"Enter your name here"</span> <span class="nt">&gt;&lt;textarea</span> <span class="na">name=</span><span class="s">"comment"</span> <span class="na">value=</span><span class="s">"Enter your message here"</span> <span class="nt">&gt;</span>Enter your message here<span class="nt">&lt;/textarea&gt;&lt;input</span> <span class="na">value=</span><span class="s">"submit"</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="nt">&gt;&lt;/form&gt;</span><span class="c">&lt;!-- END OF FORM --&gt;</span>
+</pre>
+</div>
+
+
+<h2>Methods:</h2>
+
+<p>Now here is a little bit of detail about each feature in this class, how to implement the methods, the parameters they take and what they output.</p>
+
+<p>This class has been developed to try and give you complete freedom over how you want to generate your html forms. But It also provides you with some simple pre-generated forms, such as an upload form or a login form.</p>
+
+<h2>start()</h2>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">start</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<p>It's that easy. Because this class is so clever, if you don't enter any parameters it will provide you with default settings. This allows you to create html forms on the fly.</p>
+
+<h3>Parameters</h3>
+
+<h4>Options</h4>
+
+<p>This parameter is the only parameter for this method. It  is where you define your options for the form. E.g. its name, its action and its method. This parameter takes an array only. It requires a named key and a value. </p>
+
+<p>Imagine that you are writing you html, and you want to set the name of an element, you'd type:</p>
+
+<div class="highlight">
+<pre><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">"formname"</span><span class="nt">&gt;</span>
+</pre>
+</div>
+
+
+<p>Well this parameter works in a similar way:</p>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">start</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'formname'</span><span class="p">));</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<p>And there you go! It works the same way for things like method, action etc... Most methods throughout this class take a similar parameter; an array where you define your html element properties. </p>
+
+<h2>End()</h2>
+
+<h3>Implementation</h3>
+
+<p>This method is used to close the form. It basically adds <code>&lt;/form&gt;</code> to the page.</p>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">start</span><span class="p">();</span>
+    <span class="c1">//  Other stuff goes here</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">end</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>This method does not take any parameters. I included it purely to make it tidier and more consistent when wanting to end the html form.</p>
+
+<h2>Dropdown()</h2>
+
+<h3>Implementation</h3>
+
+<p>This method is available to make generating drop-down lists easier for you. This was one of the main reasons I made this class.</p>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">dropdown</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'car'</span> <span class="o">=&gt;</span>  <span class="s1">'ferrari'</span><span class="p">,</span> <span class="s1">'plane'</span> <span class="o">=&gt;</span> <span class="s1">'boeing 747'</span><span class="p">),</span> <span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'vehiclelist'</span><span class="p">,</span> <span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'dropdown'</span><span class="p">));</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>There are two parameters for this method, both being arrays. The first parameter is the list of items that you would like to be displayed and the values that they carry.</p>
+
+<h4>Items</h4>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="k">array</span><span class="p">(</span><span class="s1">'what_is_displayed'</span> <span class="o">=&gt;</span> <span class="s1">'value_of_item'</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h4>Options</h4>
+
+<p>The second parameter is the options parameter, this acts the same as the options parameter for the <code>start()</code> method. Please see <code>start()</code> method.</p>
+
+<h2>Textarea()</h2>
+
+<p>This method was introduced to make implementing textareas with the form class easier.</p>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">textarea</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'my_textarea'</span><span class="p">,</span> <span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'textarea1'</span><span class="p">),</span> <span class="s1">'This will be inside the textarea when it is generated.'</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>Just like most of the methods in this class it takes an array of options. The other parameter is just a string, this is what will be shown inside the textarea when it is generated.</p>
+
+<h2>Input()</h2>
+
+<p>This is just a standard input field where you can determine the type. By default (no parameters) it is a text field.</p>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">input</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'first_name'</span><span class="p">,</span> <span class="s1">'placeholder'</span> <span class="o">=&gt;</span> <span class="s1">'Type your first name here.'</span><span class="p">));</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>This takes the same parameter as <code>start()</code>; an array of options.</p>
+
+<h2>Submit()</h2>
+
+<p>This method generates a submit button to finish off your form.</p>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">submit</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'my_submit_button'</span><span class="p">));</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>This can take an array of options (again). If you do not pass through any parameters the button will use default values.</p>
+
+<h2>Password()</h2>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">password</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>This can take an array of options, but it is not necessary because the default values are probably sufficient.</p>
+
+<h2>Login()</h2>
+
+<p>This method is one of the special ones that I decided to include, it makes creating login forms easier, well one line. As of now this method is not easily customisable and uses the old style of parameters. </p>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">login</span><span class="p">(</span><span class="nv">$name</span> <span class="o">=</span> <span class="s1">'login'</span><span class="p">,</span> <span class="nv">$action</span> <span class="o">=</span> <span class="s1">'page2.php'</span><span class="p">,</span> <span class="nv">$id</span> <span class="o">=</span> <span class="s1">'login-form'</span><span class="p">,</span> <span class="nv">$class</span> <span class="o">=</span> <span class="s1">'login-form'</span><span class="p">,</span> <span class="nv">$line</span><span class="o">-</span><span class="nx">breaks</span> <span class="o">=</span> <span class="k">true</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<h4>Name</h4>
+
+<p>This parameter is the name of your login form. The default value is login.</p>
+
+<h4>Action</h4>
+
+<p>This parameter is the action of the form. This is where you are sending the POST data to. </p>
+
+<h4>Id</h4>
+
+<p>This is the id of the form. Used for CSS.</p>
+
+<h4>Class</h4>
+
+<p>This is the class of the form. Used for CSS.</p>
+
+<h4>Breaks</h4>
+
+<p>If this parameter is false there will be no line breaks between the inputs. If true then there will. The default value of this parameter is false.</p>
+
+<h2>GetForms()</h2>
+
+<p>This method returns all of the forms that you have on the page where you use this method.</p>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+    <span class="nx">Form</span><span class="o">::</span><span class="na">getForms</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>This method does not take any parameters.</p>
+
+<h2>Upload()</h2>
+
+<p>This method generates an upload form and handles the movement of the file for you. If the action is empty it will move the temporary file to the location that you specify, else you will be required to place the <code>recieveFile()</code> method on the receiving page. </p>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+   <span class="nx">Form</span><span class="o">::</span><span class="na">upload</span><span class="p">(</span><span class="s1">'image_upload'</span><span class="p">,</span> <span class="s1">'/uploads/images/'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'image/jpeg'</span><span class="p">,</span> <span class="s1">'image/png'</span><span class="p">,</span> <span class="s1">'image/gif'</span><span class="p">,</span> <span class="s1">'image/jpg'</span><span class="p">),</span> <span class="s1">''</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<h4>Name</h4>
+
+<p>This is the name of your upload form.</p>
+
+<h4>Where</h4>
+
+<p>This is where the file will be uploaded.</p>
+
+<h4>Allows</h4>
+
+<p>This is an array of file types that are allowed.</p>
+
+<h4>Action</h4>
+
+<p>This is the action of the form, if this is empty the upload logic will run on the same page as the form. If the action is not empty you will need to use the <code>receiveFile()</code> method on the same page as you specified in the action, or the page where you wish to handle the upload. This is handy If you wish to implement some form of captcha system when uploading files.</p>
+
+<h2>ReceiveFile()</h2>
+
+<h3>Implementation</h3>
+
+<div class="highlight">
+<pre><span class="cp">&lt;?php</span>
+   <span class="nx">Form</span><span class="o">::</span><span class="na">receiveFile</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre>
+</div>
+
+
+<h3>Parameters</h3>
+
+<p>This method does not take any parameters.</p>
+
+<h3>Authors and Contributors</h3>
+
+<p>Developed by <a href="https://github.com/Bertdasquirt" class="user-mention">@Bertdasquirt</a> because he felt the need to make something to put on github. I also thought that this was something that would be pretty useful to people who wanted to be able to easily manage their HTML forms with PHP.</p>
+
+<p>More features to come in the future and of course upon request.</p>
+
+<h3>Support or Contact</h3>
+
+<p>If you are having any problems feel free to contact me: @_craigchilds (Twitter) or place an issue on the repository.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Bertdasquirt">Bertdasquirt</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
