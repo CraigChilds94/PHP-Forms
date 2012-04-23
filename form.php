@@ -10,7 +10,7 @@
 	#                                                    #                    
 	# Author: Craig CHILDS                               #
 	#                                                    #
-	# Version: 0.1.1                                     #
+	# Version: 0.1.4                                     #
 	# http://licence.visualidiot.com/                    #
 	######################################################
 	
@@ -86,36 +86,13 @@ class Form {
 		     self::submit();
 	    self::end();
 	}
-	
-	public static function set($type, $key, $value){
-		//  Save ourselves from checking both uppercase and lowercase
-		$type = strtolower($type);
-		
-		if(!empty($type) && !empty($key) && !empty($value)){
-			return $type[$key] = $value;
-		}
-		
-		return array('Error' => 'You are trying to set nothing.');
-	}
-	
-	public static function getInputType($name){
-		if(!empty(self::$forms)){
-			foreach(self::$forms as $form){
-				if(!empty($form[$name])){
-					return $form[$name];
-				}
-			}
-		}
-		
-		return array('error' => 'There is no form by that name, or you have not declared a request type. e.g.(POST, GET, REQUEST)');
-	}
-	
+
 	public static function listforms(){
 		//  If there are forms loop through and echo with a line break
 		if(!empty(self::$forms)){
 			foreach(self::$forms as $form){
 				if(!empty($form)){
-					echo $form  . '<br>';
+					echo $form['name']  . '<br>';
 				}
 			}
 		}else{
