@@ -81,7 +81,7 @@ class Form {
 		self::start(array('name' => $name, 'method' => 'POST', 'enctype' => "multipart/form-data", "action" => $action));
 			 self::input(array('type' => 'text', 'name' => 'username', 'placeholder' => 'Type your username here'));
 		     echo ($breaks ? '<br>' : '');
-		     self::password('password', '', 'Type your password here');
+		     self::password(array('placeholder' => 'Type your password here'));
 	         echo ($breaks ? '<br>' : '');
 		     self::submit();
 	    self::end();
@@ -186,7 +186,7 @@ class Form {
 		if(!in_array($tag, $varied)){
 			$out .= '>';
 		}else{
-			$out .=  '>' . ($tag == 'button' ? $options['value'] : '') . '</' . $tag . '>';
+			$out .=  '>' . (in_array($tag, $varied) ? $options['value'] : '') . '</' . $tag . '>';
 		}
 		
 		return $out;
