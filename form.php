@@ -87,14 +87,10 @@ class Form {
 	    self::end();
 	}
 
-	public static function listforms(){
+	public static function getForms(){
 		//  If there are forms loop through and echo with a line break
 		if(!empty(self::$forms)){
-			foreach(self::$forms as $form){
-				if(!empty($form)){
-					echo $form['name']  . '<br>';
-				}
-			}
+			return self::$forms;
 		}else{
 			//  Otherwise throw error.
 			echo 'You do not have any forms on this page.';
