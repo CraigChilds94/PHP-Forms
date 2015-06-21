@@ -1,0 +1,12 @@
+{
+    "name": "craigchilds/php-forms",
+    "description": "Form Wrapper",
+    "authors": [
+        {
+            "name": "CraigChilds94",
+            "email": "childscraig17@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
