@@ -41,7 +41,7 @@ class Tag {
         $tag = (new String('<'))->append($this->$tagName)
             ->append($this->buildAttributes());
 
-        if($selfClosing) {
+        if($this->selfClosing) {
             $tag->append('/>');
 
             echo $tag;
@@ -70,7 +70,7 @@ class Tag {
 
         foreach($this->attributes as $name => $value)
         {
-            if(!$selfClosing && $name == 'value') continue;
+            if(!$this->selfClosing && $name == 'value') continue;
 
             $attributeString->append(' ')
                 ->append($name)
